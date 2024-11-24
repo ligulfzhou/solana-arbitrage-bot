@@ -69,9 +69,7 @@ fn main() {
 
     // ** setup RPC connection
     let connection_url = match cluster {
-        Cluster::Mainnet => {
-            "https://mainnet.rpc.jito.wtf/?access-token=746bee55-1b6f-4130-8347-5e1ea373333f"
-        }
+        Cluster::Mainnet => "https://mainnet.block-engine.jito.wtf/",
         _ => cluster.url(),
     };
     info!("using connection: {}", connection_url);
