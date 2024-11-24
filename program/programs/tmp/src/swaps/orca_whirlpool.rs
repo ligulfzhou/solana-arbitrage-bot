@@ -64,16 +64,21 @@ pub struct OrcaWhirlpoolSwap<'info> {
     /// CHECK: not care
     pub whirlpool_program: UncheckedAccount<'info>,
 
+    /// CHECK: not care
     // #[account(address = token::ID)]
     pub token_program: Program<'info, Token>,
 
+    /// CHECK: not care
     pub token_authority: Signer<'info>,
 
+    /// CHECK: not care
     #[account(mut)]
     pub whirlpool: UncheckedAccount<'info>,
 
+    /// CHECK: not care
     #[account(mut)]
     pub token_owner_account_a: Account<'info, TokenAccount>,
+    /// CHECK: not care
     #[account(mut)]
     pub token_vault_a: Account<'info, TokenAccount>,
 

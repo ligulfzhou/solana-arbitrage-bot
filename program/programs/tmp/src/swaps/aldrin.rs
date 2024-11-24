@@ -125,47 +125,72 @@ pub fn _aldrin_swap_v2<'info>(
 
 #[derive(Accounts)]
 pub struct AldrinSwapV1<'info> {
+    /// CHECK: not care
     pub pool_public_key: AccountInfo<'info>,
+    /// CHECK: not care
     pub pool_signer: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub pool_mint: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub base_token_vault: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub quote_token_vault: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub fee_pool_token_account: AccountInfo<'info>,
+    /// CHECK: not care
     pub user_transfer_authority: Signer<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub user_base_ata: Account<'info, TokenAccount>,
+    /// CHECK: not care
     #[account(mut)]
     pub user_quote_ata: Account<'info, TokenAccount>,
+    /// CHECK: not care
     pub aldrin_v1_program: AccountInfo<'info>,
+    /// CHECK: not care
     pub token_program: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
 }
 
 #[derive(Accounts)]
 pub struct AldrinSwapV2<'info> {
+    /// CHECK: not care
     pub pool_public_key: AccountInfo<'info>,
+    /// CHECK: not care
     pub pool_signer: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub pool_mint: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub base_token_vault: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub quote_token_vault: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub fee_pool_token_account: AccountInfo<'info>,
+    /// CHECK: not care
     pub user_transfer_authority: Signer<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub user_base_ata: Account<'info, TokenAccount>,
+    /// CHECK: not care
     #[account(mut)]
     pub user_quote_ata: Account<'info, TokenAccount>,
+    /// CHECK: not care
     pub aldrin_v2_program: AccountInfo<'info>,
+    /// CHECK: not care
     pub curve: AccountInfo<'info>, // v2 difference!
+    /// CHECK: not care
     pub token_program: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
 }

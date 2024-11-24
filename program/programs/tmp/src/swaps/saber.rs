@@ -54,23 +54,28 @@ pub fn _saber_swap<'info>(
 
 #[derive(Accounts, Clone)]
 pub struct SaberSwap<'info> {
+    /// CHECK: not care
     #[account(mut)]
     pub pool_account: AccountInfo<'info>,
+    /// CHECK: not care
     pub authority: AccountInfo<'info>,
     pub user_transfer_authority: Signer<'info>,
     #[account(mut)]
     pub user_src: Account<'info, TokenAccount>,
+    /// CHECK: not care
     #[account(mut)]
     pub pool_src: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub pool_dst: AccountInfo<'info>,
     #[account(mut)]
     pub user_dst: Account<'info, TokenAccount>,
     #[account(mut)]
     pub fee_dst: Account<'info, TokenAccount>,
-    // ...
+    /// CHECK: not care
     pub saber_swap_program: AccountInfo<'info>,
     #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
+    /// CHECK: not care
     pub token_program: AccountInfo<'info>,
 }

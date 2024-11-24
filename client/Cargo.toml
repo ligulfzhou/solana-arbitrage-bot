@@ -25,8 +25,8 @@ path = "src/setup/setup_open_orders.rs"
 
 [dependencies]
 solana-sdk = "1.9.9"
-anchor-spl = { version = "0.22.1", features = ["dex"] }
-anchor-client = { version = "0.22.0", features = ["debug"] }
+anchor-spl = { version = "0.29.0", features = ["dex"] }
+anchor-client = { version = "0.29.0", features = ["debug"] }
 anchor-lang = "0.22.0"
 tmp = { path = "../program/programs/tmp", features = ["no-entrypoint"]}
 serde = { version = "1.0", features = ["derive"] }

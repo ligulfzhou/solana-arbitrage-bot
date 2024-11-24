@@ -5,11 +5,47 @@ use anchor_spl::token::{Token, TokenAccount};
 use anchor_spl::token_interface::{Mint, Token2022};
 use solana_program;
 
+// swap_v2 https://solscan.io/tx/3fcfV3ZaxHTjpSLStZaLop8m3QgsAZcRRxBBan4vYgKcgcGppsoJsK7wzkHTsAYReKs79bgefgYnThvb5pyUokiS
+//         https://solscan.io/tx/2APhCCfTCRfuM7LDPdySftD1AZsxEPZzzkFLgfeonze1wWCQjoGvf74DvuQXhfu77h7iFDaf7Xa1jU4qjxWhXNY6
+// swap_v1 https://solscan.io/tx/3MrSpZJMSwT94otpVvLXydgUkyDgPTmSXDwsxBaZzwXVYxsxQ7MV55aK7hVMfcux6uJDwng8VGxovhfKDUBJedcm
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub struct RaydiumClmmData {
+    pub discriminator: u64,
+    pub amount: u64,
+    pub other_amount_threshold: u64,
+    pub sqrt_price_limit_x64: u128,
+    pub is_base_input: bool,
+}
+
 pub fn _raydium_clmm_swap<'info>(
     ctx: &Context<'_, '_, '_, 'info, RaydiumClmmSwap<'info>>,
     amount_in: u64,
 ) -> Result<()> {
-    // let cpi_accounts = cpi::accounts::SwapSingleV2 {
+    let data = RaydiumClmmData {
+        discriminator: 14449647541112719096,
+        amount: amount_in,
+        other_amount_threshold: 0,
+        sqrt_price_limit_x64: 0,
+        is_base_input: true,
+    };
+
+    let ix_accounts = vec![
+        AccountMeta::new(ctx.accounts.payer.key(), true),
+        AccountMeta::new_readonly(*ctx.accounts.amm_config.key, false),
+        AccountMeta::new(*ctx.accounts.pool_state.key, false),
+        AccountMeta::new(ctx.accounts.input_token_account.key(), false),
+        AccountMeta::new(ctx.accounts.output_token_account.key(), false),
+        AccountMeta::new(*ctx.accounts.input_vault.key, false),
+        AccountMeta::new(*ctx.accounts.output_vault.key, false),
+        AccountMeta::new(*ctx.accounts.observation_state.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.token_program.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.token_program_2022.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.memo_program.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.input_vault_mint.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.output_vault_mint.key, false),
+    ];
+    // let cpi_accounts = vec! [
     //     payer: ctx.accounts.payer.to_account_info(),
     //     amm_config: ctx.accounts.amm_config.to_account_info(),
     //     pool_state: ctx.accounts.pool_state.to_account_info(),
@@ -23,8 +59,8 @@ pub fn _raydium_clmm_swap<'info>(
     //     memo_program: ctx.accounts.memo_program.to_account_info(),
     //     input_vault_mint: ctx.accounts.input_vault_mint.to_account_info(),
     //     output_vault_mint: ctx.accounts.output_vault_mint.to_account_info(),
-    // };
-    //
+    // ];
+
     // let cpi_context = CpiContext::new(ctx.accounts.clmm_program.to_account_info(), cpi_accounts)
     //     .with_remaining_accounts(ctx.remaining_accounts.to_vec());
     //
@@ -43,14 +79,11 @@ pub const SWAP_MEMO_MSG: &'static [u8] = b"raydium_swap";
 
 #[derive(Accounts)]
 pub struct RaydiumClmmSwap<'info> {
-    pub clmm_program: UncheckedAccount<'info>, //  Program<'info, AmmV3>,
     /// The user performing the swap
     #[account(mut)]
     pub payer: Signer<'info>,
 
     /// The factory state to read protocol fees
-    // #[account(address = pool_state.load()?.amm_config)]
-    // pub amm_config: Box<Account<'info, AmmConfig>>,
     /// CHECK: not care
     #[account()]
     pub amm_config: UncheckedAccount<'info>,
@@ -59,7 +92,7 @@ pub struct RaydiumClmmSwap<'info> {
     /// CHECK: not care
     #[account(mut)]
     pub pool_state: UncheckedAccount<'info>,
-    // pub pool_state: AccountLoader<'info, PoolState>,
+
     /// The user token account for input token
     #[account(mut)]
     pub input_token_account: Account<'info, TokenAccount>,
@@ -74,6 +107,7 @@ pub struct RaydiumClmmSwap<'info> {
     pub input_vault: UncheckedAccount<'info>,
     // pub input_vault: Box<InterfaceAccount<'info, TokenAccount>>,
     /// The vault token account for output token
+    /// CHECK: not care
     #[account(mut)]
     pub output_vault: UncheckedAccount<'info>,
     // pub output_vault: Box<InterfaceAccount<'info, TokenAccount>>,

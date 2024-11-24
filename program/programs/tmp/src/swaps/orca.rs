@@ -56,23 +56,35 @@ pub fn _orca_swap<'info>(
 
 #[derive(Accounts)]
 pub struct OrcaSwap<'info> {
+    /// CHECK: not care
     pub token_swap: AccountInfo<'info>,
+    /// CHECK: not care
     pub authority: AccountInfo<'info>,
+    /// CHECK: not care
     pub user_transfer_authority: Signer<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub user_src: Account<'info, TokenAccount>,
+    /// CHECK: not care
     #[account(mut)]
     pub pool_src: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub pool_dst: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub user_dst: Account<'info, TokenAccount>,
+    /// CHECK: not care
     #[account(mut)]
     pub pool_mint: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub fee_account: AccountInfo<'info>,
+    /// CHECK: not care
     pub token_program: AccountInfo<'info>,
+    /// CHECK: not care
     pub token_swap_program: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
 }

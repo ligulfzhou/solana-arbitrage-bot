@@ -40,12 +40,17 @@ pub fn _serum_swap<'info>(
 
 #[derive(Accounts)]
 pub struct InitOpenOrder<'info> {
+    /// CHECK: not care
     #[account(mut)]
     pub open_orders: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(signer)]
     pub authority: AccountInfo<'info>,
+    /// CHECK: not care
     pub market: AccountInfo<'info>,
+    /// CHECK: not care
     pub dex_program: AccountInfo<'info>,
+    /// CHECK: not care
     pub rent: AccountInfo<'info>,
 }
 
@@ -62,13 +67,18 @@ impl<'info> From<&mut InitOpenOrder<'info>> for dex::InitOpenOrders<'info> {
 
 #[derive(Accounts)]
 pub struct CloseAccount<'info> {
+    /// CHECK: not care
     #[account(mut)]
     open_orders: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(signer)]
     authority: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     destination: AccountInfo<'info>,
+    /// CHECK: not care
     market: AccountInfo<'info>,
+    /// CHECK: not care
     dex_program: AccountInfo<'info>,
 }
 
@@ -89,15 +99,20 @@ impl<'info> From<&mut CloseAccount<'info>> for dex::CloseOpenOrders<'info> {
 #[derive(Accounts)]
 pub struct SerumSwap<'info> {
     pub market: MarketAccounts<'info>,
+    /// CHECK: not care
     #[account(signer)]
     pub authority: AccountInfo<'info>,
     #[account(mut)]
     pub pc_wallet: Account<'info, TokenAccount>, // !!
     // Programs.
+    /// CHECK: not care
     pub dex_program: AccountInfo<'info>,
+    /// CHECK: not care
     pub token_program: AccountInfo<'info>,
     // Sysvars.
+    /// CHECK: not care
     pub rent: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut, seeds=[b"swap_state"], bump, )]
     pub swap_state: Account<'info, SwapState>,
 }
@@ -255,35 +270,46 @@ fn coin_lots(market: &MarketState, size: u64) -> u64 {
 // common accounts, i.e., program ids, sysvars, and the `pc_wallet`.
 #[derive(Accounts, Clone)]
 pub struct MarketAccounts<'info> {
+    /// CHECK: not care
     #[account(mut)]
     pub market: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub open_orders: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub request_queue: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub event_queue: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub bids: AccountInfo<'info>,
+    /// CHECK: not care
     #[account(mut)]
     pub asks: AccountInfo<'info>,
     // The `spl_token::Account` that funds will be taken from, i.e., transferred
     // from the user into the market's vault.
     //
     // For bids, this is the base currency. For asks, the quote.
+    /// CHECK: not care
     #[account(mut)]
     pub order_payer_token_account: AccountInfo<'info>,
     // Also known as the "base" currency. For a given A/B market,
     // this is the vault for the A mint.
+    /// CHECK: not care
     #[account(mut)]
     pub coin_vault: AccountInfo<'info>,
     // Also known as the "quote" currency. For a given A/B market,
     // this is the vault for the B mint.
+    /// CHECK: not care
     #[account(mut)]
     pub pc_vault: AccountInfo<'info>,
     // PDA owner of the DEX's token accounts for base + quote currencies.
+    /// CHECK: not care
     pub vault_signer: AccountInfo<'info>,
     // User wallets.
+    /// CHECK: not care
     #[account(mut)]
     pub coin_wallet: Account<'info, TokenAccount>, // !!
 }
