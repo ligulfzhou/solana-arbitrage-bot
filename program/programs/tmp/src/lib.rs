@@ -26,7 +26,7 @@ pub mod tmp {
         swap_state.is_valid = false;  
         Ok(())
     }
-    
+
     pub fn start_swap(ctx: Context<TokenAndSwapState>, swap_input: u64) -> Result<()> {
         let swap_state = &mut ctx.accounts.swap_state;
         swap_state.start_balance = ctx.accounts.src.amount; // ! 

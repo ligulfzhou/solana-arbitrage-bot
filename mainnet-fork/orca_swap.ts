@@ -19,7 +19,7 @@ async function main() {
     // 3. We will be swapping 0.1 SOL for some ORCA
     let params = orcaPoolConfigs[OrcaPoolConfig.SOL_USDC];
     const orcaSolPool = orca.getPool(params);
-    
+
     let solToken = orcaSolPool.getTokenA(); // SOL 
     const usdcToken = orcaSolPool.getTokenB(); // USDC
 

@@ -15,7 +15,7 @@ pub fn _mercurial_swap<'info>(
     // get initial balances
     let data = SwapData {
         instruction: 4, // swap instruction 
-        amount_in: amount_in,
+        amount_in,
         minimum_amount_out: 0, // no saftey lmfao 
     };
 

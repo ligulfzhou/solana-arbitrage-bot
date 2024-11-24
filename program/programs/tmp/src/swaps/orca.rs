@@ -15,7 +15,7 @@ pub fn _orca_swap<'info>(
     
     let data = SwapData {
         instruction: 1, // swap instruction 
-        amount_in: amount_in,
+        amount_in,
         minimum_amount_out: 0, // no saftey lmfao 
     };
 

@@ -52,7 +52,7 @@ pub fn _aldrin_swap_v1<'info>(
     let instruction = Instruction {
         program_id: *ctx.accounts.aldrin_v1_program.key,
         accounts: ix_accounts,
-        data: data,
+        data,
     };
 
     let accounts = vec![
@@ -121,7 +121,7 @@ pub fn _aldrin_swap_v2<'info>(
     let instruction = Instruction {
         program_id: *ctx.accounts.aldrin_v2_program.key,
         accounts: ix_accounts,
-        data: data,
+        data,
     };
 
     let accounts = vec![
