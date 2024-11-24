@@ -16,5 +16,7 @@ pub use serum::*;
 mod raydium_amm;
 pub use raydium_amm::*;
 
+mod orca_whirlpool;
 mod raydium_clmm;
+
 pub use raydium_clmm::*;

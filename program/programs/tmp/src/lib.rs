@@ -9,6 +9,8 @@ use state::SwapState;
 
 pub mod error;
 pub mod ix_data;
+pub mod orca_whirlpool_cpi;
+pub mod raydium_clmm;
 pub mod state;
 pub mod swaps;
 
@@ -61,13 +63,49 @@ pub mod tmp {
     pub fn raydium_clmm_swap<'info>(
         ctx: Context<'_, '_, '_, 'info, RaydiumClmmSwap<'info>>,
     ) -> Result<()> {
-        basic_pool_swap!(_raydium_clmm_swap, RaydiumClmmSwap<'info>)(ctx)
+        let amount_in = prepare_swap(&ctx.accounts.swap_state)?;
+
+        _raydium_clmm_swap(&ctx, amount_in)?;
+
+        // end swap
+        let user_dst = &mut ctx.accounts.output_token_account;
+        let swap_state = &mut ctx.accounts.swap_state;
+
+        // end_swap(swap_state, user_dst)?;
+        let dst_start_balance = user_dst.amount; // pre-swap balance
+        user_dst.reload()?; // update underlying account
+        let dst_end_balance = user_dst.amount; // post-swap balance
+        let swap_amount_out = dst_end_balance - dst_start_balance;
+        msg!("swap amount out: {:?}", swap_amount_out);
+
+        // will be input amount into the next swap ix
+        swap_state.swap_input = swap_amount_out;
+
+        Ok(())
     }
 
     pub fn raydium_amm_swap<'info>(
         ctx: Context<'_, '_, '_, 'info, RaydiumAmmSwap<'info>>,
     ) -> Result<()> {
-        basic_pool_swap!(_raydium_amm_swap, RaydiumAmmSwap<'info>)(ctx)
+        let amount_in = prepare_swap(&ctx.accounts.swap_state)?;
+
+        _raydium_amm_swap(&ctx, amount_in)?;
+
+        // end swap
+        let user_dst = &mut ctx.accounts.user_token_destination;
+        let swap_state = &mut ctx.accounts.swap_state;
+
+        // end_swap(swap_state, user_dst)?;
+        let dst_start_balance = user_dst.amount; // pre-swap balance
+        user_dst.reload()?; // update underlying account
+        let dst_end_balance = user_dst.amount; // post-swap balance
+        let swap_amount_out = dst_end_balance - dst_start_balance;
+        msg!("swap amount out: {:?}", swap_amount_out);
+
+        // will be input amount into the next swap ix
+        swap_state.swap_input = swap_amount_out;
+
+        Ok(())
     }
 
     pub fn orca_swap<'info>(ctx: Context<'_, '_, '_, 'info, OrcaSwap<'info>>) -> Result<()> {
@@ -199,6 +237,7 @@ pub struct InitSwapState<'info> {
         payer=payer,
         seeds=[b"swap_state"], 
         bump,
+        space=SwapState::SIZE,
     )]
     pub swap_state: Account<'info, SwapState>,
     #[account(mut)]

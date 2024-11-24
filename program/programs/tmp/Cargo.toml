@@ -29,9 +29,13 @@ ahash = "=0.8.6"
 sha2 = "0.10.2"
 
 # raydium
-amm-anchor = { git = "https://github.com/raydium-io/raydium-contract-instructions", package = "amm-anchor" }
-raydium-amm-v3 = { git = "https://github.com/raydium-io/raydium-clmm", features = [
-    "no-entrypoint",
-    "cpi",
-] }
+#amm-anchor = { git = "https://github.com/raydium-io/raydium-contract-instructions", package = "amm-anchor" }
+#raydium-amm-v3 = { git = "https://github.com/raydium-io/raydium-clmm", features = [
+#    "no-entrypoint",
+#    "cpi",
+#] }
 
+# orca whirlpool
+#whirlpool-cpi = { git = "https://github.com/orca-so/whirlpool-cpi", branch = "anchor/0.29.0" }
+bincode = "1"
+default-boxed = "0.2.0"

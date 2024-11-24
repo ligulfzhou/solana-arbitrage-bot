@@ -2,3 +2,7 @@
 members = [
     "programs/*"
 ]
+
+
+[profile.release]
+overflow-checks = true

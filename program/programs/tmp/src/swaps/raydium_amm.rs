@@ -1,18 +1,79 @@
+use crate::ix_data::SwapData;
 use crate::state::SwapState;
-use amm_anchor::SwapBaseIn;
 use anchor_lang::prelude::*;
 use anchor_lang::Accounts;
-use anchor_spl::token::Token;
+use anchor_spl::token::{Token, TokenAccount};
 use solana_program;
+use solana_program::instruction::{AccountMeta, Instruction};
 
 pub fn _raydium_amm_swap<'info>(
     ctx: &Context<'_, '_, '_, 'info, RaydiumAmmSwap<'info>>,
     amount_in: u64,
 ) -> Result<()> {
-    amm_anchor::swap_base_in(ctx.accounts.into(), amount_in, 0)
+    // buf.push(9);
+    // buf.extend_from_slice(&amount_in.to_le_bytes());
+    // buf.extend_from_slice(&minimum_amount_out.to_le_bytes());
+    let data = SwapData {
+        instruction: 9,
+        amount_in,
+        minimum_amount_out: 0,
+    };
+
+    let ix_accounts = vec![
+        // spl token (token program)
+        AccountMeta::new_readonly(*ctx.accounts.token_program.key, false),
+        // amm
+        AccountMeta::new(*ctx.accounts.amm.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.amm_authority.key, false),
+        AccountMeta::new(*ctx.accounts.amm_open_orders.key, false),
+        AccountMeta::new(*ctx.accounts.amm_coin_vault.key, false),
+        AccountMeta::new(*ctx.accounts.amm_pc_vault.key, false),
+        // market
+        AccountMeta::new_readonly(*ctx.accounts.market_program.key, false),
+        AccountMeta::new(*ctx.accounts.market.key, false),
+        AccountMeta::new(*ctx.accounts.market_bids.key, false),
+        AccountMeta::new(*ctx.accounts.market_asks.key, false),
+        AccountMeta::new(*ctx.accounts.market_event_queue.key, false),
+        AccountMeta::new(*ctx.accounts.market_coin_vault.key, false),
+        AccountMeta::new(*ctx.accounts.market_pc_vault.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.market_vault_signer.key, false),
+        // user
+        AccountMeta::new(ctx.accounts.user_token_source.key(), false),
+        AccountMeta::new(ctx.accounts.user_token_destination.key(), false),
+        AccountMeta::new_readonly(*ctx.accounts.user_source_owner.key, true),
+    ];
+
+    let instruction = Instruction {
+        program_id: *ctx.accounts.amm_program.key,
+        accounts: ix_accounts,
+        data: data.try_to_vec()?,
+    };
+
+    let accounts = vec![
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.amm.to_account_info(),
+        ctx.accounts.amm_authority.to_account_info(),
+        ctx.accounts.amm_open_orders.to_account_info(),
+        ctx.accounts.amm_coin_vault.to_account_info(),
+        ctx.accounts.amm_pc_vault.to_account_info(),
+        ctx.accounts.market_bids.to_account_info(),
+        ctx.accounts.market_asks.to_account_info(),
+        ctx.accounts.market_event_queue.to_account_info(),
+        ctx.accounts.market_coin_vault.to_account_info(),
+        ctx.accounts.market_pc_vault.to_account_info(),
+        ctx.accounts.market_vault_signer.to_account_info(),
+        ctx.accounts.user_token_source.to_account_info(),
+        ctx.accounts.user_token_destination.to_account_info(),
+        ctx.accounts.user_source_owner.to_account_info(),
+        ctx.accounts.amm_program.to_account_info(),
+    ];
+
+    solana_program::program::invoke(&instruction, &accounts)?;
+
+    Ok(())
 }
 
-#[derive(Accounts, Clone)]
+#[derive(Accounts)]
 pub struct RaydiumAmmSwap<'info> {
     // RaydiumAmmSwapBaseIn
     /// CHECK: Safe
@@ -57,10 +118,10 @@ pub struct RaydiumAmmSwap<'info> {
     pub market_vault_signer: UncheckedAccount<'info>,
     /// CHECK: Safe. user source token Account. user Account to swap from.
     #[account(mut)]
-    pub user_token_source: UncheckedAccount<'info>,
+    pub user_token_source: Account<'info, TokenAccount>,
     /// CHECK: Safe. user destination token Account. user Account to swap to.
     #[account(mut)]
-    pub user_token_destination: UncheckedAccount<'info>,
+    pub user_token_destination: Account<'info, TokenAccount>,
     /// CHECK: Safe. user owner Account
     #[account(mut)]
     pub user_source_owner: Signer<'info>,
@@ -69,40 +130,4 @@ pub struct RaydiumAmmSwap<'info> {
 
     #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
-}
-
-impl<'info> From<&mut RaydiumAmmSwap<'info>> for CpiContext<'_, '_, '_, 'info, SwapBaseIn<'info>> {
-    fn from(
-        accounts: &mut RaydiumAmmSwap<'info>,
-    ) -> CpiContext<'_, '_, '_, 'info, SwapBaseIn<'info>> {
-        let cpi_accounts = SwapBaseIn {
-            amm: accounts.amm.clone(),
-            amm_authority: accounts.amm_authority.clone(),
-            amm_open_orders: accounts.amm_open_orders.clone(),
-            amm_coin_vault: accounts.amm_coin_vault.clone(),
-            amm_pc_vault: accounts.amm_pc_vault.clone(),
-            market_program: accounts.market_program.clone(),
-            market: accounts.market.clone(),
-            market_bids: accounts.market_bids.clone(),
-            market_asks: accounts.market_asks.clone(),
-            market_event_queue: accounts.market_event_queue.clone(),
-            market_coin_vault: accounts.market_coin_vault.clone(),
-            market_pc_vault: accounts.market_pc_vault.clone(),
-            market_vault_signer: accounts.market_vault_signer.clone(),
-            user_token_source: accounts.user_token_source.clone(),
-            user_token_destination: accounts.user_token_destination.clone(),
-            user_source_owner: accounts.user_source_owner.clone(),
-            token_program: accounts.token_program.clone(),
-        };
-        let cpi_program = accounts.amm_program.to_account_info();
-        CpiContext::new(cpi_program, cpi_accounts)
-    }
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct RaydiumSwapInstructionBaseIn {
-    // SOURCE amount to transfer, output to DESTINATION is based on the exchange rate
-    pub amount_in: u64,
-    /// Minimum amount of DESTINATION token to output, prevents excessive slippage
-    pub minimum_amount_out: u64,
 }

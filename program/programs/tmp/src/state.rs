@@ -7,3 +7,7 @@ pub struct SwapState {
     pub swap_input: u64,    // output of swap
     pub is_valid: bool,     // saftey
 }
+
+impl SwapState {
+    pub const SIZE: usize = 8 + 8 + 8 + 1;
+}
