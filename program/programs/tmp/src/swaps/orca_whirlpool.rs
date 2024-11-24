@@ -4,9 +4,7 @@ use anchor_lang::prelude::*;
 use anchor_lang::Accounts;
 use anchor_spl::token::{Token, TokenAccount};
 use solana_program;
-// use whirlpool_cpi::{
-//     self, program::Whirlpool as WhirlpoolProgram, state::*, util::unpack::unpack_tick_array,
-// };
+use crate::state::SwapState;
 
 pub fn _orca_whirlpool_swap<'info>(
     ctx: &Context<'_, '_, '_, 'info, OrcaWhirlpoolSwap<'info>>,
@@ -62,9 +60,6 @@ pub fn _orca_whirlpool_swap<'info>(
 #[derive(Accounts)]
 pub struct OrcaWhirlpoolSwap<'info> {
     /// CHECK: not care
-    pub whirlpool_program: UncheckedAccount<'info>,
-
-    /// CHECK: not care
     // #[account(address = token::ID)]
     pub token_program: Program<'info, Token>,
 
@@ -99,7 +94,12 @@ pub struct OrcaWhirlpoolSwap<'info> {
     #[account(mut)]
     pub tick_array_2: UncheckedAccount<'info>,
 
-    #[account(mut, seeds = [b"oracle", whirlpool.key().as_ref()], bump, seeds::program = whirlpool_program.key())]
+    #[account(mut)]
     /// CHECK: checked by whirlpool_program
     pub oracle: UncheckedAccount<'info>,
+
+    /// CHECK: not care
+    pub whirlpool_program: UncheckedAccount<'info>,
+    #[account(mut, seeds=[b"swap_state"], bump)]
+    pub swap_state: Account<'info, SwapState>,
 }
