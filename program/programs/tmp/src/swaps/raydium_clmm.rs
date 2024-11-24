@@ -2,9 +2,9 @@ use crate::state::SwapState;
 use anchor_lang::prelude::*;
 use anchor_lang::Accounts;
 use anchor_spl::token::{Token, TokenAccount};
-use anchor_spl::token_interface::{Mint, Token2022};
+use anchor_spl::token_interface::Token2022;
 use solana_program;
-
+use solana_program::instruction::Instruction;
 // swap_v2 https://solscan.io/tx/3fcfV3ZaxHTjpSLStZaLop8m3QgsAZcRRxBBan4vYgKcgcGppsoJsK7wzkHTsAYReKs79bgefgYnThvb5pyUokiS
 //         https://solscan.io/tx/2APhCCfTCRfuM7LDPdySftD1AZsxEPZzzkFLgfeonze1wWCQjoGvf74DvuQXhfu77h7iFDaf7Xa1jU4qjxWhXNY6
 // swap_v1 https://solscan.io/tx/3MrSpZJMSwT94otpVvLXydgUkyDgPTmSXDwsxBaZzwXVYxsxQ7MV55aK7hVMfcux6uJDwng8VGxovhfKDUBJedcm
@@ -30,7 +30,7 @@ pub fn _raydium_clmm_swap<'info>(
         is_base_input: true,
     };
 
-    let ix_accounts = vec![
+    let mut ix_accounts = vec![
         AccountMeta::new(ctx.accounts.payer.key(), true),
         AccountMeta::new_readonly(*ctx.accounts.amm_config.key, false),
         AccountMeta::new(*ctx.accounts.pool_state.key, false),
@@ -45,34 +45,40 @@ pub fn _raydium_clmm_swap<'info>(
         AccountMeta::new_readonly(*ctx.accounts.input_vault_mint.key, false),
         AccountMeta::new_readonly(*ctx.accounts.output_vault_mint.key, false),
     ];
-    // let cpi_accounts = vec! [
-    //     payer: ctx.accounts.payer.to_account_info(),
-    //     amm_config: ctx.accounts.amm_config.to_account_info(),
-    //     pool_state: ctx.accounts.pool_state.to_account_info(),
-    //     input_token_account: ctx.accounts.input_token_account.to_account_info(),
-    //     output_token_account: ctx.accounts.output_token_account.to_account_info(),
-    //     input_vault: ctx.accounts.input_vault.to_account_info(),
-    //     output_vault: ctx.accounts.output_vault.to_account_info(),
-    //     observation_state: ctx.accounts.observation_state.to_account_info(),
-    //     token_program: ctx.accounts.token_program.to_account_info(),
-    //     token_program_2022: ctx.accounts.token_program_2022.to_account_info(),
-    //     memo_program: ctx.accounts.memo_program.to_account_info(),
-    //     input_vault_mint: ctx.accounts.input_vault_mint.to_account_info(),
-    //     output_vault_mint: ctx.accounts.output_vault_mint.to_account_info(),
-    // ];
+    let remain_account_metas = ctx.remaining_accounts.iter().map(|account|AccountMeta::new(account.key(), false)).collect::<Vec<_>>();
+    if !remain_account_metas.is_empty() {
+        ix_accounts.extend_from_slice(&remain_account_metas);
+    }
 
-    // let cpi_context = CpiContext::new(ctx.accounts.clmm_program.to_account_info(), cpi_accounts)
-    //     .with_remaining_accounts(ctx.remaining_accounts.to_vec());
-    //
-    // cpi::swap_v2(
-    //     cpi_context,
-    //     amount,
-    //     other_amount_threshold,
-    //     sqrt_price_limit_x64,
-    //     is_base_input,
-    // )
+    let instruction = Instruction {
+        program_id: *ctx.accounts.clmm_program.key,
+        accounts: ix_accounts.clone(),
+        data: data.try_to_vec()?,
+    };
 
-    todo!()
+    let mut accounts = vec![
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.amm_config.to_account_info(),
+        ctx.accounts.pool_state.to_account_info(),
+        ctx.accounts.input_token_account.to_account_info(),
+        ctx.accounts.output_token_account.to_account_info(),
+        ctx.accounts.input_vault.to_account_info(),
+        ctx.accounts.output_vault.to_account_info(),
+        ctx.accounts.observation_state.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.token_program_2022.to_account_info(),
+        ctx.accounts.memo_program.to_account_info(),
+        ctx.accounts.input_vault_mint.to_account_info(),
+        ctx.accounts.output_vault_mint.to_account_info(),
+        ctx.accounts.clmm_program.to_account_info(),
+    ];
+    let remain_accounts = ctx.remaining_accounts.iter().map(|account|account.to_account_info()).collect::<Vec<_>>();
+    if !remain_accounts.is_empty() {
+        accounts.extend_from_slice(&remain_accounts);
+    }
+
+    solana_program::program::invoke(&instruction, &accounts)?;
+    Ok(())
 }
 /// Memo msg for swap
 pub const SWAP_MEMO_MSG: &'static [u8] = b"raydium_swap";
@@ -134,6 +140,8 @@ pub struct RaydiumClmmSwap<'info> {
     /// CHECK: not care
     pub output_vault_mint: UncheckedAccount<'info>,
 
+    /// CHECK: not care
+    pub clmm_program: UncheckedAccount<'info>,
     #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
     // remaining accounts

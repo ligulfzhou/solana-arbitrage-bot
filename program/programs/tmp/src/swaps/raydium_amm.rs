@@ -77,8 +77,6 @@ pub fn _raydium_amm_swap<'info>(
 #[derive(Accounts)]
 pub struct RaydiumAmmSwap<'info> {
     // RaydiumAmmSwapBaseIn
-    /// CHECK: Safe
-    pub amm_program: UncheckedAccount<'info>,
     /// CHECK: Safe. amm Account
     #[account(mut)]
     pub amm: UncheckedAccount<'info>,
@@ -129,6 +127,8 @@ pub struct RaydiumAmmSwap<'info> {
     /// CHECK: Safe. The spl token program
     pub token_program: Program<'info, Token>,
 
+    /// CHECK: Safe
+    pub amm_program: UncheckedAccount<'info>,
     #[account(mut, seeds=[b"swap_state"], bump)]
     pub swap_state: Account<'info, SwapState>,
 }
