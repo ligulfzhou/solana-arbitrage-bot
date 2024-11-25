@@ -43,15 +43,14 @@ pub struct OrcaWhirlpoolData {
 pub fn _orca_whirlpool_swap_v2<'info>(
     ctx: &Context<'_, '_, '_, 'info, OrcaWhirlpoolSwapV2<'info>>,
     amount_in: u64,
-    other_amount_threshold: u64,
-    sqrt_price_limit: u128,
+    // sqrt_price_limit: u128,
     a_to_b: bool,
 ) -> Result<()> {
     let data = OrcaWhirlpoolData {
         discriminator: 7070309578724672555,
         amount: amount_in,
-        other_amount_threshold,
-        sqrt_price_limit,
+        other_amount_threshold: 0,
+        sqrt_price_limit: 4295048016,
         amount_specified_is_input: true,
         a_to_b,
         remaining_accounts_info: None,

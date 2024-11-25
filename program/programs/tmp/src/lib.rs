@@ -16,6 +16,7 @@ pub use swaps::*;
 
 #[program]
 pub mod tmp {
+    // use crate::instruction::{MeteoraDammSwap, OrcaWhirlpoolSwap};
     use super::*;
 
     pub fn init_program(ctx: Context<InitSwapState>) -> Result<()> {
@@ -91,6 +92,84 @@ pub mod tmp {
 
         // end swap
         let user_dst = &mut ctx.accounts.user_token_destination;
+        let swap_state = &mut ctx.accounts.swap_state;
+
+        // end_swap(swap_state, user_dst)?;
+        let dst_start_balance = user_dst.amount; // pre-swap balance
+        user_dst.reload()?; // update underlying account
+        let dst_end_balance = user_dst.amount; // post-swap balance
+        let swap_amount_out = dst_end_balance - dst_start_balance;
+        msg!("swap amount out: {:?}", swap_amount_out);
+
+        // will be input amount into the next swap ix
+        swap_state.swap_input = swap_amount_out;
+
+        Ok(())
+    }
+
+    // todo: 验证怎么判断输入输出的
+    pub fn orca_whirlpool_swap<'info>(
+        ctx: Context<'_, '_, '_, 'info, OrcaWhirlpoolSwapV2<'info>>,
+        a_to_b: bool,
+    ) -> Result<()> {
+        let amount_in = prepare_swap(&ctx.accounts.swap_state)?;
+
+        _orca_whirlpool_swap_v2(&ctx, amount_in, a_to_b)?;
+
+        // end swap
+        let user_dst = if a_to_b {
+            &mut ctx.accounts.token_owner_account_b
+        } else {
+            &mut ctx.accounts.token_owner_account_a
+        };
+        let swap_state = &mut ctx.accounts.swap_state;
+
+        // end_swap(swap_state, user_dst)?;
+        let dst_start_balance = user_dst.amount; // pre-swap balance
+        user_dst.reload()?; // update underlying account
+        let dst_end_balance = user_dst.amount; // post-swap balance
+        let swap_amount_out = dst_end_balance - dst_start_balance;
+        msg!("swap amount out: {:?}", swap_amount_out);
+
+        // will be input amount into the next swap ix
+        swap_state.swap_input = swap_amount_out;
+
+        Ok(())
+    }
+
+    pub fn meteora_damm_swap<'info>(
+        ctx: Context<'_, '_, '_, 'info, MeteoraDammSwap<'info>>,
+    ) -> Result<()> {
+        let amount_in = prepare_swap(&ctx.accounts.swap_state)?;
+
+        _meteora_damm_swap(&ctx, amount_in)?;
+
+        // end swap
+        let user_dst = &mut ctx.accounts.user_destination_token;
+        let swap_state = &mut ctx.accounts.swap_state;
+
+        // end_swap(swap_state, user_dst)?;
+        let dst_start_balance = user_dst.amount; // pre-swap balance
+        user_dst.reload()?; // update underlying account
+        let dst_end_balance = user_dst.amount; // post-swap balance
+        let swap_amount_out = dst_end_balance - dst_start_balance;
+        msg!("swap amount out: {:?}", swap_amount_out);
+
+        // will be input amount into the next swap ix
+        swap_state.swap_input = swap_amount_out;
+
+        Ok(())
+    }
+
+    pub fn meteora_dlmm_swap<'info>(
+        ctx: Context<'_, '_, '_, 'info, MeteoraDlmmSwap<'info>>,
+    ) -> Result<()> {
+        let amount_in = prepare_swap(&ctx.accounts.swap_state)?;
+
+        _meteora_dlmm_swap(&ctx, amount_in)?;
+
+        // end swap
+        let user_dst = &mut ctx.accounts.user_token_out;
         let swap_state = &mut ctx.accounts.swap_state;
 
         // end_swap(swap_state, user_dst)?;

@@ -17,8 +17,13 @@ mod raydium_amm;
 pub use raydium_amm::*;
 
 mod meteora_damm;
-mod meteora_dlmm;
-mod orca_whirlpool;
-mod raydium_clmm;
+pub use meteora_damm::*;
 
+mod meteora_dlmm;
+pub use meteora_dlmm::*;
+
+mod orca_whirlpool;
+pub use orca_whirlpool::*;
+
+mod raydium_clmm;
 pub use raydium_clmm::*;

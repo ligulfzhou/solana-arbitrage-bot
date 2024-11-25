@@ -11,7 +11,7 @@ pub struct MeteoraDammData {
 }
 
 pub fn _meteora_damm_swap<'info>(
-    ctx: &Context<'_, '_, '_, 'info, DynamicAmmSwap<'info>>,
+    ctx: &Context<'_, '_, '_, 'info, MeteoraDammSwap<'info>>,
     amount_in: u64,
 ) -> Result<()> {
     let data = MeteoraDammData {
@@ -69,7 +69,7 @@ pub fn _meteora_damm_swap<'info>(
 }
 
 #[derive(Accounts)]
-pub struct DynamicAmmSwap<'info> {
+pub struct MeteoraDammSwap<'info> {
     #[account(mut)]
     /// CHECK: Pool account (PDA)
     pub pool: UncheckedAccount<'info>,
