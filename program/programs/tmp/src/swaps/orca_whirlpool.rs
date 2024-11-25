@@ -31,7 +31,7 @@ pub struct RemainingAccountsInfo {
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct OrcaWhirlpoolData {
-    pub descriminator: u64,
+    pub discriminator: u64,
     pub amount: u64,
     pub other_amount_threshold: u64,
     pub sqrt_price_limit: u128,
@@ -48,7 +48,7 @@ pub fn _orca_whirlpool_swap_v2<'info>(
     a_to_b: bool,
 ) -> Result<()> {
     let data = OrcaWhirlpoolData {
-        descriminator: 7070309578724672555,
+        discriminator: 7070309578724672555,
         amount: amount_in,
         other_amount_threshold,
         sqrt_price_limit,
