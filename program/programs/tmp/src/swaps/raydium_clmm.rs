@@ -45,7 +45,11 @@ pub fn _raydium_clmm_swap<'info>(
         AccountMeta::new_readonly(*ctx.accounts.input_vault_mint.key, false),
         AccountMeta::new_readonly(*ctx.accounts.output_vault_mint.key, false),
     ];
-    let remain_account_metas = ctx.remaining_accounts.iter().map(|account|AccountMeta::new(account.key(), false)).collect::<Vec<_>>();
+    let remain_account_metas = ctx
+        .remaining_accounts
+        .iter()
+        .map(|account| AccountMeta::new(account.key(), false))
+        .collect::<Vec<_>>();
     if !remain_account_metas.is_empty() {
         ix_accounts.extend_from_slice(&remain_account_metas);
     }
@@ -72,7 +76,11 @@ pub fn _raydium_clmm_swap<'info>(
         ctx.accounts.output_vault_mint.to_account_info(),
         ctx.accounts.clmm_program.to_account_info(),
     ];
-    let remain_accounts = ctx.remaining_accounts.iter().map(|account|account.to_account_info()).collect::<Vec<_>>();
+    let remain_accounts = ctx
+        .remaining_accounts
+        .iter()
+        .map(|account| account.to_account_info())
+        .collect::<Vec<_>>();
     if !remain_accounts.is_empty() {
         accounts.extend_from_slice(&remain_accounts);
     }

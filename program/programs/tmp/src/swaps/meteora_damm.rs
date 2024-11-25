@@ -1,8 +1,7 @@
-use anchor_lang::prelude::*;
-use anchor_spl::token::{TokenAccount};
-use solana_program::instruction::Instruction;
 use crate::state::SwapState;
-
+use anchor_lang::prelude::*;
+use anchor_spl::token::TokenAccount;
+use solana_program::instruction::Instruction;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct MeteoraDammData {
@@ -69,7 +68,6 @@ pub fn _meteora_damm_swap<'info>(
     Ok(())
 }
 
-
 #[derive(Accounts)]
 pub struct DynamicAmmSwap<'info> {
     #[account(mut)]
@@ -115,7 +113,6 @@ pub struct DynamicAmmSwap<'info> {
     /// CHECK: Admin fee token account. Used to receive trading fee. It's mint field must matched with user_source_token mint field.
     pub admin_token_fee: UncheckedAccount<'info>,
     // Protocol Token Fee
-
     /// CHECK: User account. Must be owner of user_source_token.
     pub user: Signer<'info>,
 
