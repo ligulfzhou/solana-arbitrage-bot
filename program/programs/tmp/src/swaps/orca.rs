@@ -60,7 +60,6 @@ pub struct OrcaSwap<'info> {
     pub token_swap: AccountInfo<'info>,
     /// CHECK: not care
     pub authority: AccountInfo<'info>,
-    /// CHECK: not care
     pub user_transfer_authority: Signer<'info>,
     /// CHECK: not care
     #[account(mut)]
@@ -82,6 +81,7 @@ pub struct OrcaSwap<'info> {
     pub fee_account: AccountInfo<'info>,
     /// CHECK: not care
     pub token_program: AccountInfo<'info>,
+
     /// CHECK: not care
     pub token_swap_program: AccountInfo<'info>,
     /// CHECK: not care

@@ -10,6 +10,10 @@ orca:
     https://github.com/orca-so/whirlpools
     mainnet/devnet: whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc
 
+    https://github.com/orca-so/whirlpool-cpi-sample/blob/main/anchor-0.30.1/programs/whirlpool-cpi-sample/src/instructions/proxy_swap.rs#L44
+    https://github.com/orca-so/whirlpool-cpi
+
+
 meteora:
     damm: Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB
     dlmm: LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo
