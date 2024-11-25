@@ -8,7 +8,7 @@ use crate::state::SwapState;
 pub struct MeteoraDammData {
     pub discriminator: u64,
     pub in_amount: u64,
-    pub minimum_out_amount: u64
+    pub minimum_out_amount: u64,
 }
 
 pub fn _meteora_damm_swap<'info>(
@@ -20,62 +20,54 @@ pub fn _meteora_damm_swap<'info>(
         in_amount: amount_in,
         minimum_out_amount: 0,
     };
-    // let data =
 
-    // let ix_accounts = vec![
-    //     // spl token (token program)
-    //     AccountMeta::new_readonly(*ctx.accounts.token_program.key, false),
-    //     // amm
-    //     AccountMeta::new(*ctx.accounts.amm.key, false),
-    //     AccountMeta::new_readonly(*ctx.accounts.amm_authority.key, false),
-    //     AccountMeta::new(*ctx.accounts.amm_open_orders.key, false),
-    //     AccountMeta::new(*ctx.accounts.amm_coin_vault.key, false),
-    //     AccountMeta::new(*ctx.accounts.amm_pc_vault.key, false),
-    //     // market
-    //     AccountMeta::new_readonly(*ctx.accounts.market_program.key, false),
-    //     AccountMeta::new(*ctx.accounts.market.key, false),
-    //     AccountMeta::new(*ctx.accounts.market_bids.key, false),
-    //     AccountMeta::new(*ctx.accounts.market_asks.key, false),
-    //     AccountMeta::new(*ctx.accounts.market_event_queue.key, false),
-    //     AccountMeta::new(*ctx.accounts.market_coin_vault.key, false),
-    //     AccountMeta::new(*ctx.accounts.market_pc_vault.key, false),
-    //     AccountMeta::new_readonly(*ctx.accounts.market_vault_signer.key, false),
-    //     // user
-    //     AccountMeta::new(ctx.accounts.user_token_source.key(), false),
-    //     AccountMeta::new(ctx.accounts.user_token_destination.key(), false),
-    //     AccountMeta::new_readonly(*ctx.accounts.user_source_owner.key, true),
-    // ];
-    //
-    // let instruction = Instruction {
-    //     program_id: *ctx.accounts.amm_program.key,
-    //     accounts: ix_accounts,
-    //     data: data.try_to_vec()?,
-    // };
-    //
-    // let accounts = vec![
-    //     ctx.accounts.token_program.to_account_info(),
-    //     ctx.accounts.amm.to_account_info(),
-    //     ctx.accounts.amm_authority.to_account_info(),
-    //     ctx.accounts.amm_open_orders.to_account_info(),
-    //     ctx.accounts.amm_coin_vault.to_account_info(),
-    //     ctx.accounts.amm_pc_vault.to_account_info(),
-    //     ctx.accounts.market_bids.to_account_info(),
-    //     ctx.accounts.market_asks.to_account_info(),
-    //     ctx.accounts.market_event_queue.to_account_info(),
-    //     ctx.accounts.market_coin_vault.to_account_info(),
-    //     ctx.accounts.market_pc_vault.to_account_info(),
-    //     ctx.accounts.market_vault_signer.to_account_info(),
-    //     ctx.accounts.user_token_source.to_account_info(),
-    //     ctx.accounts.user_token_destination.to_account_info(),
-    //     ctx.accounts.user_source_owner.to_account_info(),
-    //     ctx.accounts.amm_program.to_account_info(),
-    // ];
+    let ix_accounts = vec![
+        AccountMeta::new(*ctx.accounts.pool.key, false),
+        AccountMeta::new(ctx.accounts.user_source_token.key(), false),
+        AccountMeta::new_readonly(ctx.accounts.user_destination_token.key(), false),
+        AccountMeta::new(*ctx.accounts.a_vault.key, false),
+        AccountMeta::new(*ctx.accounts.b_vault.key, false),
+        AccountMeta::new(*ctx.accounts.a_token_vault.key, false),
+        AccountMeta::new(*ctx.accounts.b_token_vault.key, false),
+        AccountMeta::new(*ctx.accounts.a_vault_lp_mint.key, false),
+        AccountMeta::new(*ctx.accounts.b_vault_lp_mint.key, false),
+        AccountMeta::new(*ctx.accounts.a_vault_lp.key, false),
+        AccountMeta::new(*ctx.accounts.b_vault_lp.key, false),
+        AccountMeta::new(*ctx.accounts.admin_token_fee.key, false),
+        AccountMeta::new_readonly(*ctx.accounts.user.key, true),
+        AccountMeta::new_readonly(*ctx.accounts.vault_program.key, false),
+        AccountMeta::new_readonly(ctx.accounts.token_program.key(), false),
+    ];
 
-    // solana_program::program::invoke(&instruction, &accounts)?;
+    let instruction = Instruction {
+        program_id: *ctx.accounts.dynamic_amm_program.key,
+        accounts: ix_accounts,
+        data: data.try_to_vec()?,
+    };
+
+    let accounts = vec![
+        ctx.accounts.pool.to_account_info(),
+        ctx.accounts.user_source_token.to_account_info(),
+        ctx.accounts.user_destination_token.to_account_info(),
+        ctx.accounts.a_vault.to_account_info(),
+        ctx.accounts.b_vault.to_account_info(),
+        ctx.accounts.a_token_vault.to_account_info(),
+        ctx.accounts.b_token_vault.to_account_info(),
+        ctx.accounts.a_vault_lp_mint.to_account_info(),
+        ctx.accounts.b_vault_lp_mint.to_account_info(),
+        ctx.accounts.a_vault_lp.to_account_info(),
+        ctx.accounts.b_vault_lp.to_account_info(),
+        ctx.accounts.admin_token_fee.to_account_info(),
+        ctx.accounts.user.to_account_info(),
+        ctx.accounts.vault_program.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.dynamic_amm_program.to_account_info(),
+    ];
+
+    solana_program::program::invoke(&instruction, &accounts)?;
 
     Ok(())
 }
-
 
 
 #[derive(Accounts)]
@@ -122,6 +114,7 @@ pub struct DynamicAmmSwap<'info> {
     #[account(mut)]
     /// CHECK: Admin fee token account. Used to receive trading fee. It's mint field must matched with user_source_token mint field.
     pub admin_token_fee: UncheckedAccount<'info>,
+    // Protocol Token Fee
 
     /// CHECK: User account. Must be owner of user_source_token.
     pub user: Signer<'info>,
@@ -131,7 +124,7 @@ pub struct DynamicAmmSwap<'info> {
     /// CHECK: Token program.
     pub token_program: UncheckedAccount<'info>,
 
-    #[account(address = dynamic_amm::ID)]
+    #[account()]
     /// CHECK: Dynamic AMM program account
     pub dynamic_amm_program: UncheckedAccount<'info>,
     #[account(mut, seeds=[b"swap_state"], bump)]

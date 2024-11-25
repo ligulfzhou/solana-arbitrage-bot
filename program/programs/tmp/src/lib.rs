@@ -9,7 +9,6 @@ use state::SwapState;
 
 pub mod error;
 pub mod ix_data;
-pub mod orca_whirlpool_cpi;
 pub mod state;
 pub mod swaps;
 

@@ -13,3 +13,16 @@ orca:
 meteora:
     damm: Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB
     dlmm: LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo
+
+    https://github.com/MeteoraAg/cpi-examples
+
+
+amm:
+    #[cfg(feature = "staging")]
+    declare_id!("ammbh4CQztZ6txJ8AaQgPsWjd6o7GhmvopS2JAo5bCB");
+
+    #[cfg(not(feature = "staging"))]
+    declare_id!("Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB");
+
+计算amm：
+    https://github.com/mercurial-finance/mercurial-dynamic-amm-sdk/blob/master/rust-client/src/instructions/dynamic_amm/swap.rs
