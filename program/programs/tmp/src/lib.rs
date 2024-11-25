@@ -11,12 +11,10 @@ pub mod error;
 pub mod ix_data;
 pub mod state;
 pub mod swaps;
-
 pub use swaps::*;
 
 #[program]
 pub mod tmp {
-    // use crate::instruction::{MeteoraDammSwap, OrcaWhirlpoolSwap};
     use super::*;
 
     pub fn init_program(ctx: Context<InitSwapState>) -> Result<()> {
