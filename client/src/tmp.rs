@@ -140,7 +140,7 @@ fn ask_iteration(iteration: &mut Iteration, fee_tier: &FeeTier, ob: &mut OrderBo
     done
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let cluster = Cluster::Localnet;
     let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::confirmed());
 
@@ -246,33 +246,31 @@ fn main() {
     // println!("----");
 
     // do a swap and check the amount
-    let mut PROGRAM_LAYOUT_VERSIONS = HashMap::new();
-    PROGRAM_LAYOUT_VERSIONS.insert("4ckmDgGdxQoPDLUkDT3vHgSAkzA3QRdNq5ywwY4sUSJn", 1);
-    PROGRAM_LAYOUT_VERSIONS.insert("BJ3jrUzddfuSrZHXSCxMUUQsjKEyLmuuyZebkcaFp2fg", 1);
-    PROGRAM_LAYOUT_VERSIONS.insert("EUqojwWA2rd19FZrzeBncJsm38Jm1hEhE3zsmX3bRc2o", 2);
-    PROGRAM_LAYOUT_VERSIONS.insert("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin", 3);
+    let mut program_layout_versions = HashMap::new();
+    program_layout_versions.insert("4ckmDgGdxQoPDLUkDT3vHgSAkzA3QRdNq5ywwY4sUSJn", 1);
+    program_layout_versions.insert("BJ3jrUzddfuSrZHXSCxMUUQsjKEyLmuuyZebkcaFp2fg", 1);
+    program_layout_versions.insert("EUqojwWA2rd19FZrzeBncJsm38Jm1hEhE3zsmX3bRc2o", 2);
+    program_layout_versions.insert("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin", 3);
 
-    let LAYOUT_V1_SPAN = 3220;
-    let LAYOUT_V2_SPAN = 3228;
+    let layout_v1_span = 3220;
+    let layout_v2_span = 3228;
 
-    let layout_v = PROGRAM_LAYOUT_VERSIONS
+    let layout_v = program_layout_versions
         .get(SERUM_PROGRAM_ID.to_string().as_str())
         .unwrap();
     let space = if *layout_v == 1 {
-        LAYOUT_V1_SPAN
+        layout_v1_span
     } else {
-        LAYOUT_V2_SPAN
+        layout_v2_span
     };
 
     let owner_kp_path = "../../mainnet_fork/localnet_owner.key";
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
     println!("{}", owner.pubkey());
 
     let open_orders = Keypair::new();
 
-    let rent_exemption_amount = connection
-        .get_minimum_balance_for_rent_exemption(space)
-        .unwrap();
+    let rent_exemption_amount = connection.get_minimum_balance_for_rent_exemption(space)?;
 
     let create_account_ix = solana_sdk::system_instruction::create_account(
         &owner.pubkey(),
@@ -284,8 +282,8 @@ fn main() {
 
     // setup anchor things
     let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::confirmed());
-    let program = provider.program(*ARB_PROGRAM_ID);
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let program = provider.program(*ARB_PROGRAM_ID)?;
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     let init_ix = program
         .request()
@@ -429,6 +427,8 @@ fn main() {
             base_balance_src - base_balance_dst
         );
     }
+
+    Ok(())
 
     // // aldrin AMM quotes = jupiter's quotes :)
     // let src_amount = 295787369218 as u128; // USDC in

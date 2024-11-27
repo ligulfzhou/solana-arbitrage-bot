@@ -26,20 +26,20 @@ use client::utils::read_json_dir;
 
 use indicatif::ProgressBar;
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let cluster = Cluster::Localnet;
 
     env_logger::init();
     // let owner_kp_path = "../../../mainnet.key";
     let owner_kp_path = "../mainnet-fork/localnet_owner.key";
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     // ** setup RPC connection
     let connection = RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::confirmed());
 
     let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::confirmed());
-    let program = provider.program(*ARB_PROGRAM_ID);
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let program = provider.program(*ARB_PROGRAM_ID)?;
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     let serum_dir = PoolDir {
         tipe: PoolType::SerumPoolType,
@@ -72,22 +72,22 @@ fn main() {
         let pool: SerumPool = serde_json::from_str(&json_str).unwrap();
 
         // do a swap and check the amount
-        let mut PROGRAM_LAYOUT_VERSIONS = HashMap::new();
-        PROGRAM_LAYOUT_VERSIONS.insert("4ckmDgGdxQoPDLUkDT3vHgSAkzA3QRdNq5ywwY4sUSJn", 1);
-        PROGRAM_LAYOUT_VERSIONS.insert("BJ3jrUzddfuSrZHXSCxMUUQsjKEyLmuuyZebkcaFp2fg", 1);
-        PROGRAM_LAYOUT_VERSIONS.insert("EUqojwWA2rd19FZrzeBncJsm38Jm1hEhE3zsmX3bRc2o", 2);
-        PROGRAM_LAYOUT_VERSIONS.insert("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin", 3);
+        let mut program_layout_versions = HashMap::new();
+        program_layout_versions.insert("4ckmDgGdxQoPDLUkDT3vHgSAkzA3QRdNq5ywwY4sUSJn", 1);
+        program_layout_versions.insert("BJ3jrUzddfuSrZHXSCxMUUQsjKEyLmuuyZebkcaFp2fg", 1);
+        program_layout_versions.insert("EUqojwWA2rd19FZrzeBncJsm38Jm1hEhE3zsmX3bRc2o", 2);
+        program_layout_versions.insert("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin", 3);
 
-        let LAYOUT_V1_SPAN = 3220;
-        let LAYOUT_V2_SPAN = 3228;
+        let layout_v1_span = 3220;
+        let layout_v2_span = 3228;
 
-        let layout_v = PROGRAM_LAYOUT_VERSIONS
+        let layout_v = program_layout_versions
             .get(SERUM_PROGRAM_ID.to_string().as_str())
             .unwrap();
         let space = if *layout_v == 1 {
-            LAYOUT_V1_SPAN
+            layout_v1_span
         } else {
-            LAYOUT_V2_SPAN
+            layout_v2_span
         };
 
         let open_orders = Keypair::new();
@@ -145,4 +145,6 @@ fn main() {
     // save open orders accounts as .JSON
     let json_market_oo = serde_json::to_string(&market_to_open_orders).unwrap();
     std::fs::write("./serum_open_orders.json", json_market_oo).unwrap();
+
+    Ok(())
 }

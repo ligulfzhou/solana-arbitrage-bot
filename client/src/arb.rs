@@ -2,18 +2,17 @@ use anchor_client::solana_client::rpc_client::RpcClient;
 use anchor_client::solana_client::rpc_config::RpcSendTransactionConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
-use anchor_client::{Cluster, Program};
+use anchor_client::Cluster;
+use anchor_client::Program;
 use log::info;
 use solana_sdk::instruction::Instruction;
 use solana_sdk::transaction::Transaction;
 use std::borrow::Borrow;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::rc::Rc;
 use std::vec;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_ix;
-
-use crate::pool::PoolOperations;
 
 use crate::utils::{derive_token_address, PoolGraph, PoolIndex, PoolQuote};
 
@@ -24,7 +23,7 @@ pub struct Arbitrager {
     pub cluster: Cluster,
     // vv -- need to clone these explicitly -- vv
     pub owner: Rc<Keypair>,
-    pub program: Program,
+    pub program: Program<Rc<Keypair>>,
     pub connection: RpcClient,
 }
 

@@ -30,15 +30,15 @@ pub fn str2pubkey(s: &str) -> Pubkey {
 }
 
 pub fn derive_token_address(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
-    let (pda, _) = Pubkey::find_program_address(
+    Pubkey::find_program_address(
         &[
             &owner.to_bytes(),
             &TOKEN_PROGRAM_ID.to_bytes(),
             &mint.to_bytes(),
         ],
         &ASSOCIATED_TOKEN_PROGRAM_ID,
-    );
-    pda
+    )
+    .0
 }
 
 #[derive(Debug, Clone)]

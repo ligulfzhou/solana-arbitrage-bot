@@ -21,7 +21,7 @@ use solana_sdk::account::Account;
 
 use client::arb::*;
 use client::constants::*;
-use client::pool::{pool_factory, PoolDir, PoolOperations, PoolType};
+use client::pool::{pool_factory, PoolDir, PoolType};
 use client::serialize::token::unpack_token_account;
 use client::utils::{
     derive_token_address, read_json_dir, PoolEdge, PoolGraph, PoolIndex, PoolQuote,
@@ -49,7 +49,7 @@ fn add_pool_to_graph<'a>(
     quotes.push(quote.clone());
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let cluster = match args.cluster.as_str() {
         "localnet" => Cluster::Localnet,
@@ -79,14 +79,14 @@ fn main() {
         RpcClient::new_with_commitment(cluster.url(), CommitmentConfig::confirmed());
 
     // setup anchor things
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
     let rc_owner = Rc::new(owner);
     let provider = Client::new_with_options(
         cluster.clone(),
         rc_owner.clone(),
         CommitmentConfig::confirmed(),
     );
-    let program = provider.program(*ARB_PROGRAM_ID);
+    let program = provider.program(*ARB_PROGRAM_ID)?;
 
     // ** define pool JSONs
     let mut pool_dirs = vec![];
@@ -269,4 +269,6 @@ fn main() {
             break;
         } // dont get too small
     }
+
+    Ok(())
 }

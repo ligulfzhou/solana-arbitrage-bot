@@ -1,0 +1,17 @@
+
+deploy program:
+    anchor deploy
+
+
+fetch idl:
+
+
+raydium:
+    cpmm: CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C
+
+
+dump program:
+    solana program dump -u m CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C raydium_cpmm.so
+
+fetch idl:
+    anchor idl fetch CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C --provider.cluster

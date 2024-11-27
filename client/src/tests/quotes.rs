@@ -57,12 +57,12 @@ fn test_all_pool_quotes(pool_dir: String, pool_tipe: PoolType) {
 
     let owner_kp_path = "../mainnet-fork/localnet_owner.key";
     // setup anchor things
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
     println!("owner: {}", owner.pubkey());
 
     let provider = Client::new_with_options(cluster, Rc::new(owner), CommitmentConfig::confirmed());
-    let program = provider.program(*ARB_PROGRAM_ID);
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let program = provider.program(*ARB_PROGRAM_ID).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     let pool_paths = read_json_dir(&pool_dir);
     let mut err_count = 0;
@@ -84,7 +84,7 @@ fn test_pool_quote(
     pool: &mut Box<dyn PoolOperations>,
     pool_path: &str,
     connection: &RpcClient,
-    program: &Program,
+    program: &Program<Rc<Keypair>>,
     owner: &Keypair,
 ) -> u64 {
     // get token reserve addrs

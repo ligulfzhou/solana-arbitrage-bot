@@ -4,9 +4,10 @@ use solana_sdk::account::Account;
 use solana_sdk::instruction::Instruction;
 
 use crate::pools::*;
-use std::fmt::Debug;
-
 use anchor_client::Cluster;
+use solana_sdk::signature::Keypair;
+use std::fmt::Debug;
+use std::rc::Rc;
 
 #[derive(Debug)]
 pub struct PoolDir {
@@ -65,7 +66,7 @@ pub trait PoolOperations: Debug {
     ) -> u128;
     fn swap_ix(
         &self,
-        program: &Program,
+        program: &Program<Rc<Keypair>>,
         owner: &Pubkey,
         mint_in: &Pubkey,
         mint_out: &Pubkey,

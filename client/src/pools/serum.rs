@@ -11,11 +11,11 @@ use crate::utils::derive_token_address;
 
 use solana_sdk::pubkey::Pubkey;
 
-use anchor_spl::dex::serum_dex::{critbit::SlabView, matching::OrderBookState, state::Market};
-use std::ops::DerefMut;
-
 use anchor_client::{Cluster, Program};
+use anchor_spl::dex::serum_dex::{critbit::SlabView, matching::OrderBookState, state::Market};
 use solana_sdk::instruction::Instruction;
+use std::ops::DerefMut;
+use std::rc::Rc;
 
 use crate::constants::*;
 use crate::pool_utils::serum::*;
@@ -25,6 +25,7 @@ use solana_sdk::clock::Epoch;
 
 use anchor_spl::dex::serum_dex::matching::Side;
 
+use solana_sdk::signature::Keypair;
 use std::str::FromStr;
 use tmp::accounts as tmp_accounts;
 use tmp::instruction as tmp_instructions;
@@ -274,7 +275,7 @@ impl PoolOperations for SerumPool {
 
     fn swap_ix(
         &self,
-        program: &Program,
+        program: &Program<Rc<Keypair>>,
         owner: &Pubkey,
         mint_in: &Pubkey,
         _mint_out: &Pubkey,

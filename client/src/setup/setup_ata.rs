@@ -19,7 +19,7 @@ use solana_sdk::system_program;
 use log::warn;
 
 use client::constants::*;
-use client::pool::{pool_factory, PoolOperations, PoolType};
+use client::pool::{pool_factory, PoolType};
 use client::serialize::token::unpack_token_account;
 use client::utils::{derive_token_address, read_json_dir};
 
@@ -34,7 +34,7 @@ fn main() {
 
     env_logger::init();
     let owner_kp_path = "../../../mainnet.key";
-    let owner = read_keypair_file(owner_kp_path.clone()).unwrap();
+    let owner = read_keypair_file(owner_kp_path).unwrap();
 
     // ** setup RPC connection
     let connection = RpcClient::new_with_commitment(
