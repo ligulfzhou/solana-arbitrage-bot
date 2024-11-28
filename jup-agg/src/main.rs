@@ -1,5 +1,6 @@
 mod config;
 mod keypair_generator;
+mod mints;
 
 use common::reqwest_utils::get_json_with_params;
 use serde::{Deserialize, Serialize};
