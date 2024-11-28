@@ -72,9 +72,8 @@ impl PoolOperations for AldrinPool {
         let user_quote_ata =
             derive_token_address(owner, &Pubkey::from_str(quote_token_mint).unwrap());
 
-        let swap_ix;
-        if self.pool_version == 1 {
-            swap_ix = program
+        let swap_ix = if self.pool_version == 1 {
+            program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV1 {
                     pool_public_key: self.pool_public_key.0,
@@ -93,9 +92,9 @@ impl PoolOperations for AldrinPool {
                 })
                 .args(tmp_ix::AldrinSwapV1 { is_inverted })
                 .instructions()
-                .unwrap();
+                .unwrap()
         } else {
-            swap_ix = program
+            program
                 .request()
                 .accounts(tmp_accounts::AldrinSwapV2 {
                     pool_public_key: self.pool_public_key.0,
@@ -115,8 +114,8 @@ impl PoolOperations for AldrinPool {
                 })
                 .args(tmp_ix::AldrinSwapV2 { is_inverted })
                 .instructions()
-                .unwrap();
-        }
+                .unwrap()
+        };
         swap_ix
     }
 
