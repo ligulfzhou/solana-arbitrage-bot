@@ -1,1 +1,2 @@
-const MINT_ACCOUNTS: Vec<&str> = vec![""];
+
+static MINT_ACCOUNTS: [&str; 1] = [""];
