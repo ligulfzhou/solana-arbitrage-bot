@@ -1,0 +1,13 @@
+[package]
+name = "common"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+dotenv = { workspace = true }
+reqwest = { workspace = true, features = ["json"] }
+tokio = { workspace = true, features = ["full"] }

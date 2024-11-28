@@ -14,7 +14,12 @@ anchor-lang =  {workspace = true}
 spl-token = { workspace = true, features = [ "no-entrypoint" ] }
 spl-token-2022 = {workspace = true, features = ["no-entrypoint"]}
 
+anyhow = {workspace = true}
 serde = { workspace = true, features = ["derive"] }
 serde_json = {workspace = true}
 
-dotenv = "0.15.0"
+dotenv = {workspace = true}
+reqwest = { workspace = true, features = ["json"] }
+tokio = {workspace = true, features = ["full"]}
+
+common = {path = "../common"}
