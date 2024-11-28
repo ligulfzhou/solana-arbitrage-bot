@@ -1,4 +1,1 @@
-
-const MINT_ACCOUNTS: Vec<&str> = vec![
-    "",
-];
+const MINT_ACCOUNTS: Vec<&str> = vec![""];

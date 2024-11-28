@@ -1,10 +1,10 @@
-use std::str::FromStr;
 use anchor_client::{
     solana_sdk::{
         commitment_config::CommitmentConfig, pubkey::Pubkey, signature::read_keypair_file,
     },
     Client, Cluster,
 };
+use std::str::FromStr;
 
 #[test]
 fn test_initialize() {
