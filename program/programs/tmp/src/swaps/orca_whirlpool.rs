@@ -78,62 +78,7 @@ pub fn _orca_whirlpool_swap_v2<'info>(
         program_id: *ctx.accounts.whirlpool_program.key,
         accounts: ix_accounts,
         data: data.try_to_vec()?,
-    };    let data = OrcaWhirlpoolData {
-        discriminator: 7070309578724672555,
-        amount: amount_in,
-        other_amount_threshold: 0,
-        sqrt_price_limit: 4295048016,
-        amount_specified_is_input: true,
-        a_to_b,
-        remaining_accounts_info: None,
     };
-
-    let ix_accounts = vec![
-        AccountMeta::new_readonly(*ctx.accounts.token_program_a.key, false),
-        AccountMeta::new_readonly(ctx.accounts.token_program_b.key(), false),
-        AccountMeta::new_readonly(*ctx.accounts.memo_program.key, false),
-        AccountMeta::new_readonly(*ctx.accounts.token_authority.key, true),
-        AccountMeta::new(*ctx.accounts.whirlpool.key, false),
-        AccountMeta::new_readonly(*ctx.accounts.token_mint_a.key, false),
-        AccountMeta::new_readonly(*ctx.accounts.token_mint_b.key, false),
-        AccountMeta::new(ctx.accounts.token_owner_account_a.key(), false),
-        AccountMeta::new(*ctx.accounts.token_vault_a.key, false),
-        AccountMeta::new(ctx.accounts.token_owner_account_b.key(), false),
-        AccountMeta::new(*ctx.accounts.token_vault_b.key, false),
-        AccountMeta::new(*ctx.accounts.tick_array_0.key, false),
-        AccountMeta::new(*ctx.accounts.tick_array_1.key, false),
-        AccountMeta::new(*ctx.accounts.tick_array_2.key, false),
-        AccountMeta::new(*ctx.accounts.oracle.key, false),
-    ];
-
-    let instruction = Instruction {
-        program_id: *ctx.accounts.whirlpool_program.key,
-        accounts: ix_accounts,
-        data: data.try_to_vec()?,
-    };
-
-    let accounts = vec![
-        ctx.accounts.token_program_a.to_account_info(),
-        ctx.accounts.token_program_b.to_account_info(),
-        ctx.accounts.memo_program.to_account_info(),
-        ctx.accounts.token_authority.to_account_info(),
-        ctx.accounts.whirlpool.to_account_info(),
-        ctx.accounts.token_mint_a.to_account_info(),
-        ctx.accounts.token_mint_b.to_account_info(),
-        ctx.accounts.token_owner_account_a.to_account_info(),
-        ctx.accounts.token_vault_a.to_account_info(),
-        ctx.accounts.token_owner_account_b.to_account_info(),
-        ctx.accounts.token_vault_b.to_account_info(),
-        ctx.accounts.tick_array_0.to_account_info(),
-        ctx.accounts.tick_array_1.to_account_info(),
-        ctx.accounts.tick_array_2.to_account_info(),
-        ctx.accounts.oracle.to_account_info(),
-        ctx.accounts.whirlpool_program.to_account_info(),
-    ];
-
-    solana_program::program::invoke(&instruction, &accounts)?;
-    Ok(())
-
 
     let accounts = vec![
         ctx.accounts.token_program_a.to_account_info(),
