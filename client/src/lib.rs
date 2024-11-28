@@ -4,6 +4,7 @@ pub mod error;
 pub mod pool;
 pub mod pool_utils;
 pub mod pools;
+pub mod redis_cli;
 pub mod serialize;
 pub mod tests;
 pub mod utils;
