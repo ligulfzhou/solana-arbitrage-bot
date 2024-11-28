@@ -4,3 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+solana-sdk = {workspace = true}
+solana-program = {workspace = true}
+solana-client =  {workspace = true}
+anchor-spl = {workspace = true, features = ["dex"]}
+anchor-client = {workspace = true, features = ["debug"]}
+anchor-lang =  {workspace = true}
+
+spl-token = { workspace = true, features = [ "no-entrypoint" ] }
+spl-token-2022 = {workspace = true, features = ["no-entrypoint"]}
+
+serde = { workspace = true, features = ["derive"] }
+serde_json = {workspace = true}

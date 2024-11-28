@@ -96,3 +96,8 @@ Thumbs.db
 
 # rust
 target
+
+
+# Added by cargo
+
+/target

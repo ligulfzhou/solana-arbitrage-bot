@@ -24,19 +24,20 @@ name = "setup_open_orders"
 path = "src/setup/setup_open_orders.rs"
 
 [dependencies]
-solana-sdk = "1.18.26"
-solana-program = "1.18.26"
-solana-client = "1.18.26"
-anchor-spl = { version = "0.30.1", features = ["dex"] }
-anchor-client = { version = "0.30.1", features = ["debug"] }
-anchor-lang = "0.30.1"
+solana-sdk = {workspace = true}
+solana-program = {workspace = true}
+solana-client =  {workspace = true}
+anchor-spl = {workspace = true, features = ["dex"]}
+anchor-client = {workspace = true, features = ["debug"]}
+anchor-lang =  {workspace = true}
 
-spl-token = { version = "3.1.1", features = [ "no-entrypoint" ] }
-spl-token-2022 = {version = "1.0.0", features = ["no-entrypoint"]}
+spl-token = { workspace = true, features = [ "no-entrypoint" ] }
+spl-token-2022 = {workspace = true, features = ["no-entrypoint"]}
 
 tmp = { path = "../program/programs/tmp", features = ["no-entrypoint"]}
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde = { workspace = true, features = ["derive"] }
+serde_json = {workspace = true}
+
 spl-math = { version = "0.3.0", features = [ "no-entrypoint" ] }
 anyhow = "1.0.55"
 #rayon = "1.5.1"
@@ -62,5 +63,3 @@ lazy_static = "1.5.0"
 solana-sdk = "1.18.26"
 proptest = "1.5.0"
 roots = "0.0.7"
-
-[workspace]
