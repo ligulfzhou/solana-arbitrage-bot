@@ -16,3 +16,5 @@ spl-token-2022 = {workspace = true, features = ["no-entrypoint"]}
 
 serde = { workspace = true, features = ["derive"] }
 serde_json = {workspace = true}
+
+dotenv = "0.15.0"

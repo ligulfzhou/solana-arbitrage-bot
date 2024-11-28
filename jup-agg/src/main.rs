@@ -1,3 +1,6 @@
+mod keypair_generator;
+mod config;
+
 use serde::{Deserialize, Serialize};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
