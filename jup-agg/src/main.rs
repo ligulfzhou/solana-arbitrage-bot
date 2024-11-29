@@ -91,7 +91,7 @@ async fn arbitrage(
         );
 
         dbg!(&msg);
-        bail!(msg)
+        // bail!(msg)
     }
 
     quote0_res.route_plan.extend(quote1_res.route_plan);

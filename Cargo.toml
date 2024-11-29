@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "client", "common",
-#    "program",
+    "client",
+    "common",
     "jup-agg"
 ]
 resolver = "2"

@@ -73,7 +73,6 @@ async function run() {
     // threhold
     const thre = 3000
     if (diffLamports > thre) {
-
         // merge quote0 and quote1 response
         let mergedQuoteResp = quote0Resp.data;
         mergedQuoteResp.outputMint = quote1Resp.data.outputMint;
