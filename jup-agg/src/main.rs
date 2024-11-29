@@ -71,7 +71,6 @@ async fn arbitrage(
         ..Default::default()
     };
     let mut quote0_res = jup_client.quote(&quote0_req).await?;
-    // dbg!(&quote0_res);
 
     let quote1_req = QuoteRequest {
         input_mint: MOODENG,
@@ -81,7 +80,6 @@ async fn arbitrage(
         ..Default::default()
     };
     let quote1_res = jup_client.quote(&quote1_req).await?;
-    // dbg!(&quote1_res);
 
     if quote1_res.out_amount > initial_amount {
         println!(
@@ -116,15 +114,9 @@ async fn arbitrage(
     let versioned_transaction: VersionedTransaction =
         bincode::deserialize(&swap_response.swap_transaction)?;
 
-    // Replace with a keypair or other struct implementing signer
-    // let null_signer = NullSigner::new(&);
     let signed_versioned_transaction =
         VersionedTransaction::try_new(versioned_transaction.message, &[payer])?;
 
-    // // send with rpc client...
-    // let rpc_client = RpcClient::new("https://api.mainnet-beta.solana.com".into());
-
-    // This will fail with "Transaction signature verification failure" as we did not really sign
     let sig = rpc_client
         .send_and_confirm_transaction(&signed_versioned_transaction)
         .await?;
@@ -153,17 +145,6 @@ async fn main() -> anyhow::Result<()> {
 
         // break;
     }
-
-    // loop {
-    //     if let Err(err) = arb(&payer).await {
-    //         println!("error occur: {:?}", err);
-    //         tokio::time::sleep(Duration::from_secs(1)).await;
-    //     } else {
-    //         tokio::time::sleep(Duration::from_micros(100)).await;
-    //     }
-    //
-    //     break;
-    // }
 
     Ok(())
 }
