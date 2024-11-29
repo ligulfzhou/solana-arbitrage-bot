@@ -58,10 +58,10 @@ fn swap_on_jupiter<'info>(
         })
         .collect();
 
-    let accounts_infos: Vec<AccountInfo> = remaining_accounts
-        .iter()
-        .map(|acc| AccountInfo { ..acc.clone() })
-        .collect();
+    // let accounts_infos: Vec<AccountInfo> = remaining_accounts
+    //     .iter()
+    //     .map(|acc| AccountInfo { ..acc.clone() })
+    //     .collect();
 
     // TODO: Check the first 8 bytes. Only Jupiter Route CPI allowed.
     invoke_signed(
@@ -70,7 +70,7 @@ fn swap_on_jupiter<'info>(
             accounts,
             data,
         },
-        &accounts_infos,
+        &remaining_accounts,
         &[],
     )
 }

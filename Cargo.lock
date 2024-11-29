@@ -2394,8 +2394,10 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "anyhow",
+ "bincode",
  "common",
  "dotenv",
+ "jupiter-swap-api-client",
  "reqwest",
  "serde",
  "serde_json",
@@ -2405,6 +2407,21 @@ dependencies = [
  "spl-token 3.5.0",
  "spl-token-2022 1.0.0",
  "tokio",
+]
+
+[[package]]
+name = "jupiter-swap-api-client"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1507ed0dc0916bbebdd3e17063e180022834dce1d982a25fcb6df75411281463"
+dependencies = [
+ "anyhow",
+ "base64 0.13.1",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serde_qs",
+ "solana-sdk",
 ]
 
 [[package]]
@@ -3708,6 +3725,17 @@ dependencies = [
  "memchr",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "serde_qs"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0431a35568651e363364210c91983c1da5eb29404d9f0928b67d4ebcfa7d330c"
+dependencies = [
+ "percent-encoding",
+ "serde",
+ "thiserror",
 ]
 
 [[package]]

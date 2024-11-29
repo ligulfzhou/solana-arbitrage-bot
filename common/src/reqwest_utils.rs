@@ -34,3 +34,43 @@ pub async fn get_json_with_params<T: for<'de> Deserialize<'de>>(
 
     Ok(res)
 }
+
+
+pub async fn post_json<Res: for<'de> Deserialize<'de>, Body: Serialize>(
+    url: &str,
+    body: Body,
+) -> anyhow::Result<Res> {
+    let client = Client::new();
+
+    let res = client
+        .post(url)
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .header(reqwest::header::ACCEPT, "application/json")
+        .json(&body)
+        .send()
+        .await?
+        .json::<Res>()
+        .await?;
+
+    Ok(res)
+}
+
+
+pub async fn post_json_raw<Body: Serialize>(
+    url: &str,
+    body: Body,
+) -> anyhow::Result<String> {
+    let client = Client::new();
+
+    let res = client
+        .post(url)
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .header(reqwest::header::ACCEPT, "application/json")
+        .json(&body)
+        .send()
+        .await?
+        .text()
+        .await?;
+
+    Ok(res)
+}
