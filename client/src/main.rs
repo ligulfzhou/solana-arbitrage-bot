@@ -3,22 +3,16 @@ use anchor_client::solana_sdk::commitment_config::CommitmentConfig;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use anchor_client::solana_sdk::signature::read_keypair_file;
 use anchor_client::solana_sdk::signature::{Keypair, Signer};
-
 use anchor_client::{Client, Cluster};
-
 use std::collections::{HashMap, HashSet};
 use std::fmt::Debug;
 use std::rc::Rc;
 use std::str::FromStr;
-
 use std::borrow::Borrow;
 use std::vec;
-
 use clap::Parser;
-
 use log::{debug, info, warn};
 use solana_sdk::account::Account;
-
 use client::arb::*;
 use client::constants::*;
 use client::pool::{pool_factory, PoolDir, PoolType};

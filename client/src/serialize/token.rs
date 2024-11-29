@@ -3,11 +3,9 @@ use anchor_client::solana_sdk::program_option::COption;
 use anchor_client::solana_sdk::pubkey::Pubkey;
 use arrayref::{array_ref, array_refs};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
-
 use std::fmt;
 use std::fmt::Debug;
 use std::str::FromStr;
-
 use serde;
 use serde::{Deserialize, Serialize, Serializer};
 use std::ops::{Deref, DerefMut};

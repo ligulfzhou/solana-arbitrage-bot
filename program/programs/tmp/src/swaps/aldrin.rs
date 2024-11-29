@@ -19,8 +19,8 @@ pub fn _aldrin_swap_v1<'info>(
     let result = hasher.finalize();
     let fcn_name = &result.as_slice()[..8];
 
-    let amount_in_bytes = &amount_in.try_to_vec().unwrap()[..];
-    let amount_out_bytes = &(0 as u64).try_to_vec().unwrap()[..];
+    let amount_in_bytes = &amount_in.try_to_vec()?[..];
+    let amount_out_bytes = &(0u64).try_to_vec()?[..];
     let bid_ask_flag = if is_inverted { 1 } else { 0 }; // 0 = bid, 1 = ask
     let bid_ask = &[bid_ask_flag];
     let data = [fcn_name, amount_in_bytes, amount_out_bytes, bid_ask].concat();

@@ -67,7 +67,6 @@ async fn arbitrage(
         input_mint: W_SOL_MINT,
         output_mint: MOODENG,
         amount: initial_amount,
-        max_accounts: Some(30),
         ..Default::default()
     };
     let mut quote0_res = jup_client.quote(&quote0_req).await?;
@@ -76,7 +75,6 @@ async fn arbitrage(
         input_mint: MOODENG,
         output_mint: W_SOL_MINT,
         amount: quote0_res.out_amount,
-        max_accounts: Some(30),
         ..Default::default()
     };
     let quote1_res = jup_client.quote(&quote1_req).await?;
@@ -93,7 +91,6 @@ async fn arbitrage(
         );
 
         dbg!(&msg);
-
         bail!(msg)
     }
 
@@ -104,23 +101,28 @@ async fn arbitrage(
         quote_response: quote0_res,
         config: Default::default(),
     };
-    let swap_response = jup_client.swap(&swap_req).await?;
+    // let swap_response = jup_client.swap(&swap_req).await?;
+    //
+    // dbg!(&swap_response.swap_transaction);
+    // dbg!(swap_response.last_valid_block_height);
+    //
+    // println!("Raw tx len: {}", swap_response.swap_transaction.len());
+    //
+    // let versioned_transaction: VersionedTransaction =
+    //     bincode::deserialize(&swap_response.swap_transaction)?;
+    //
+    // dbg!(&versioned_transaction);
+    //
+    // let signed_versioned_transaction =
+    //     VersionedTransaction::try_new(versioned_transaction.message, &[payer])?;
 
-    dbg!(&swap_response.swap_transaction);
-    dbg!(swap_response.last_valid_block_height);
+    // let sig = rpc_client
+    //     .send_and_confirm_transaction(&signed_versioned_transaction)
+    //     .await?;
+    // println!("{:}", sig.to_string());
 
-    println!("Raw tx len: {}", swap_response.swap_transaction.len());
-
-    let versioned_transaction: VersionedTransaction =
-        bincode::deserialize(&swap_response.swap_transaction)?;
-
-    let signed_versioned_transaction =
-        VersionedTransaction::try_new(versioned_transaction.message, &[payer])?;
-
-    let sig = rpc_client
-        .send_and_confirm_transaction(&signed_versioned_transaction)
-        .await?;
-    println!("{:}", sig.to_string());
+    let swap_ix = jup_client.swap_instructions(&swap_req).await?;
+    dbg!(&swap_ix);
 
     Ok(())
 }
